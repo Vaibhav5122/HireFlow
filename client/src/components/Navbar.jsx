@@ -1,4 +1,3 @@
-import React from "react";
 import { assets } from "../assets/assets";
 import { Button } from "./ui/button";
 import { SignInButton, Show, SignUpButton, UserButton } from "@clerk/react";
@@ -10,7 +9,7 @@ const Navbar = () => {
   const { user, isSignedIn, isLoaded } = useUser();
 
   return (
-    <div className="flex shadow p-4 rounded-2xl sticky mx-10 backdrop-blur-2xl my-4 bg-slate-200 ">
+    <div className="flex shadow p-4 2xl:px-20  rounded-2xl sticky mx-10 backdrop-blur-2xl my-4 bg-slate-200 ">
       <div className="flex justify-between w-full mx-auto container items-center">
         <img src={assets.logo} alt="logo" />
         <div className="flex gap-4">
