@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { CrossIcon } from "lucide-react";
+
 import {
   assets,
   JobCategories,
@@ -8,9 +8,15 @@ import {
   jobsData,
 } from "../assets/assets";
 import JobCard from "./JobCard";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 const JobListings = () => {
-  const { isSearched, searchFilter, setSearchFilter } = useContext(AppContext);
+  const { isSearched, searchFilter, setSearchFilter, jobs } =
+    useContext(AppContext);
+
+  const [showFilter, setShowFilter] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="container 2xl:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8 ">
@@ -48,8 +54,16 @@ const JobListings = () => {
               </div>
             </>
           )}
+        <Button
+          variant={"destructive"}
+          onClick={(e) => setShowFilter((prev) => !prev)}
+          className={"px-6 py-1.5 rounded border border-gray-400 lg:hidden"}
+        >
+          {showFilter ? "Close" : "Filters"}
+        </Button>
+
         {/* Category filter */}
-        <div className="hidden lg:block">
+        <div className={showFilter ? "" : "hidden lg:block"}>
           <h4 className="font-medium text-lg py-4 ">Search by categories</h4>
           <ul className="space-y-4 text-gray-600">
             {JobCategories.map((e, id) => (
@@ -61,7 +75,7 @@ const JobListings = () => {
           </ul>
         </div>
         {/* Location Filter */}
-        <div className="hidden lg:block">
+        <div className={showFilter ? "" : "hidden lg:block"}>
           <h4 className="font-medium text-lg py-4 pt-14 ">
             Search by location
           </h4>
@@ -82,10 +96,47 @@ const JobListings = () => {
         </h3>
         <p className="mb-8">Get your desired job from top companies</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {jobsData.map((job, index) => (
-            <JobCard key={index} job={job} />
-          ))}
+          {jobs
+            .slice((currentPage - 1) * 6, currentPage * 6)
+            .map((job, index) => (
+              <JobCard key={index} job={job} />
+            ))}
         </div>
+
+        {/* Pagination */}
+        {jobs.length > 0 && (
+          <div className="flex items-center gap-4 justify-center space-x-2 mt-10">
+            <Link to={"#job-list"}>
+              <img
+                onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
+                src={assets.left_arrow_icon}
+                alt=""
+              />
+            </Link>
+            {Array.from({ length: Math.ceil(jobs.length / 6) }).map((_, id) => (
+              <Link to={"#job-list"}>
+                <Button
+                  onClick={() => setCurrentPage(id + 1)}
+                  variant={"link"}
+                  className={`w-10 h-10 items-center justify-center border border-gray-300 rounded ${currentPage === id + 1 ? "bg-blue-100 text-blue-500" : "text-gray-500"}`}
+                >
+                  {id + 1}
+                </Button>
+              </Link>
+            ))}
+            <Link to={"#job-list"}>
+              <img
+                onClick={() =>
+                  setCurrentPage(
+                    Math.min(currentPage + 1, Math.ceil(jobs.length / 6)),
+                  )
+                }
+                src={assets.right_arrow_icon}
+                alt=""
+              />
+            </Link>
+          </div>
+        )}
       </section>
     </div>
   );

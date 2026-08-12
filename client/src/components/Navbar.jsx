@@ -40,7 +40,7 @@ const Navbar = () => {
                     <div className="h-5 w-24 bg-muted animate-pulse rounded" />
                   )}
                   {isSignedIn && user ? (
-                    <span className="text-sm font-medium text-foreground">
+                    <span className="max-sm:hidden  text-sm font-medium text-foreground">
                       {(
                         <p>
                           {user.firstName}, {user.lastName}{" "}
