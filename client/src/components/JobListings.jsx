@@ -10,6 +10,7 @@ import {
 import JobCard from "./JobCard";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 const JobListings = () => {
   const { isSearched, searchFilter, setSearchFilter, jobs } =
@@ -107,10 +108,15 @@ const JobListings = () => {
         {jobs.length > 0 && (
           <div className="flex items-center gap-4 justify-center space-x-2 mt-10">
             <Link to={"#job-list"}>
-              <img
+              {/* <img
+                className={currentPage === 1 ? "color-blue-500" : ""}
                 onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                 src={assets.left_arrow_icon}
                 alt=""
+              /> */}
+              <ChevronLeftIcon
+                className={currentPage !== 1 ? "text-blue-500" : ""}
+                onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
               />
             </Link>
             {Array.from({ length: Math.ceil(jobs.length / 6) }).map((_, id) => (
@@ -125,7 +131,7 @@ const JobListings = () => {
               </Link>
             ))}
             <Link to={"#job-list"}>
-              <img
+              {/* <img
                 onClick={() =>
                   setCurrentPage(
                     Math.min(currentPage + 1, Math.ceil(jobs.length / 6)),
@@ -133,6 +139,19 @@ const JobListings = () => {
                 }
                 src={assets.right_arrow_icon}
                 alt=""
+              /> */}
+              <ChevronRightIcon
+                className={
+                  currentPage !==
+                  Math.min(currentPage + 1, Math.ceil(jobs.length / 6))
+                    ? "text-blue-500"
+                    : ""
+                }
+                onClick={() =>
+                  setCurrentPage(
+                    Math.min(currentPage + 1, Math.ceil(jobs.length / 6)),
+                  )
+                }
               />
             </Link>
           </div>
