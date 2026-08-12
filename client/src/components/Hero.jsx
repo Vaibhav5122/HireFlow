@@ -22,15 +22,15 @@ const Hero = () => {
   const onSearch = () => {
     setSearchFilter({
       title: titleRef.current.value,
-      locationRef: locationRef.current.value,
+      location: locationRef.current.value,
     });
     setIsSearched(true);
   };
 
   return (
     <div className="container 2xl:px-20 mx-auto my-10 flex flex-col gap-10">
-      <div className="bg-linear-to-r from-emerald-500 to-emerald-700 px-20 p-10 rounded-2xl w-full flex-col items-center justify-center">
-        <div className="flex flex-col items-center justify-center gap-7">
+      <div className="bg-gradient-to-r from-emerald-500 to-emerald-700 px-6 sm:px-10 py-10 rounded-2xl w-full flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center gap-7 w-full">
           <div className="flex-col flex gap-4 items-center justify-center ">
             <h1 className="text-2xl">Over 10,000 jobs to apply</h1>
             <p className="font-light  max-w-xl text-md mx-auto text-wrap  text-center">
@@ -67,12 +67,12 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <div className="border border-gray-400 shadow-md rounded">
-        <div className="p-4 flex gap-12 items-center justify-center">
-          <p>Trusted by</p>
+      <div className="border border-gray-400 shadow-md rounded p-4">
+        <div className="flex  flex-wrap items-center justify-center gap-6">
+          <p className="sm:w-full lg:w-auto text-center">Trusted by</p>
           {BrandLogo.map((e) => (
             <div className="flex" key={e.id}>
-              <img className="h-7" src={e.src} alt="not" />
+              <img className="h-7 sm:h-8 mx-3" src={e.src} alt="brand" />
             </div>
           ))}
         </div>
