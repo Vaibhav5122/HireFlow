@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 
 import {
@@ -18,6 +18,57 @@ const JobListings = () => {
 
   const [showFilter, setShowFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedLocations, setSelectedLocations] = useState([]);
+
+  const [filteredJobs, setFilteredJobs] = useState(jobs);
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category],
+    );
+  };
+  const handleLocationChange = (location) => {
+    setSelectedLocations((prev) =>
+      prev.includes(location)
+        ? prev.filter((c) => c !== location)
+        : [...prev, location],
+    );
+  };
+
+  useEffect(() => {
+    const matchesCategory = (job) =>
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(job.category);
+
+    const matchesLocation = (job) =>
+      selectedLocations.length === 0 ||
+      selectedLocations.includes(job.location);
+
+    const matchesTitle = (job) =>
+      searchFilter.title === "" ||
+      job.title.toLowerCase().includes(searchFilter.title.toLowerCase());
+
+    const matchesSearchLocation = (job) =>
+      searchFilter.location === "" ||
+      job.location.toLowerCase().includes(searchFilter.location.toLowerCase());
+
+    const newFilteredJobs = jobs
+      .slice()
+      .reverse()
+      .filter(
+        (job) =>
+          matchesCategory(job) &&
+          matchesLocation(job) &&
+          matchesTitle(job) &&
+          matchesSearchLocation(job),
+      );
+    setFilteredJobs(newFilteredJobs);
+    setCurrentPage(1);
+  }, [jobs, selectedCategories, selectedLocations, searchFilter]);
 
   return (
     <div className="container 2xl:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8 ">
@@ -69,7 +120,12 @@ const JobListings = () => {
           <ul className="space-y-4 text-gray-600">
             {JobCategories.map((e, id) => (
               <li key={id} className="flex gap-3 items-center">
-                <input className="scale-125" type="checkbox" />
+                <input
+                  className="scale-125"
+                  type="checkbox"
+                  onChange={() => handleCategoryChange(e)}
+                  checked={selectedCategories.includes(e)}
+                />
                 {e}
               </li>
             ))}
@@ -83,7 +139,12 @@ const JobListings = () => {
           <ul className="space-y-4 text-gray-600">
             {JobLocations.map((e, id) => (
               <li key={id} className="flex gap-3 items-center">
-                <input className="scale-125" type="checkbox" />
+                <input
+                  className="scale-125"
+                  type="checkbox"
+                  onChange={() => handleLocationChange(e)}
+                  checked={selectedLocations.includes(e)}
+                />
                 {e}
               </li>
             ))}
@@ -97,7 +158,7 @@ const JobListings = () => {
         </h3>
         <p className="mb-8">Get your desired job from top companies</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {jobs
+          {filteredJobs
             .slice((currentPage - 1) * 6, currentPage * 6)
             .map((job, index) => (
               <JobCard key={index} job={job} />
@@ -105,7 +166,7 @@ const JobListings = () => {
         </div>
 
         {/* Pagination */}
-        {jobs.length > 0 && (
+        {filteredJobs.length > 0 && (
           <div className="flex items-center gap-4 justify-center space-x-2 mt-10">
             <Link to={"#job-list"}>
               {/* <img
@@ -119,17 +180,19 @@ const JobListings = () => {
                 onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
               />
             </Link>
-            {Array.from({ length: Math.ceil(jobs.length / 6) }).map((_, id) => (
-              <Link to={"#job-list"}>
-                <Button
-                  onClick={() => setCurrentPage(id + 1)}
-                  variant={"link"}
-                  className={`w-10 h-10 items-center justify-center border border-gray-300 rounded ${currentPage === id + 1 ? "bg-blue-100 text-blue-500" : "text-gray-500"}`}
-                >
-                  {id + 1}
-                </Button>
-              </Link>
-            ))}
+            {Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map(
+              (_, id) => (
+                <Link to={"#job-list"} key={id}>
+                  <Button
+                    onClick={() => setCurrentPage(id + 1)}
+                    variant={"link"}
+                    className={`w-10 h-10 items-center justify-center border border-gray-300 rounded ${currentPage === id + 1 ? "bg-blue-100 text-blue-500" : "text-gray-500"}`}
+                  >
+                    {id + 1}
+                  </Button>
+                </Link>
+              ),
+            )}
             <Link to={"#job-list"}>
               {/* <img
                 onClick={() =>
@@ -143,13 +206,16 @@ const JobListings = () => {
               <ChevronRightIcon
                 className={
                   currentPage !==
-                  Math.min(currentPage + 1, Math.ceil(jobs.length / 6))
+                  Math.min(currentPage + 1, Math.ceil(filteredJobs.length / 6))
                     ? "text-blue-500"
                     : ""
                 }
                 onClick={() =>
                   setCurrentPage(
-                    Math.min(currentPage + 1, Math.ceil(jobs.length / 6)),
+                    Math.min(
+                      currentPage + 1,
+                      Math.ceil(filteredJobs.length / 6),
+                    ),
                   )
                 }
               />

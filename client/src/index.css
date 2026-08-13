@@ -12,6 +12,16 @@
   font-family: neucha-regular;
 } */
 
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.153 0.006 107.1);

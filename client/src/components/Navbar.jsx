@@ -1,18 +1,25 @@
 import { assets } from "../assets/assets";
 import { Button } from "./ui/button";
 import { SignInButton, Show, SignUpButton, UserButton } from "@clerk/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/react";
 import { Loader } from "lucide-react";
 
 const Navbar = () => {
   const { user, isSignedIn, isLoaded } = useUser();
 
+  const navigate = useNavigate();
+
   return (
     <div className="sticky top-2 z-50">
       <div className="container mx-auto 2xl:px-20 px-4">
         <div className="flex items-center justify-between gap-4 shadow-2xl p-4 rounded-2xl backdrop-blur-2xl border border-slate-200 bg-white/70">
-          <img src={assets.logo} alt="logo" className="h-10" />
+          <img
+            onClick={() => navigate("/")}
+            src={assets.logo}
+            alt="logo"
+            className="h-10 cursor-pointer"
+          />
           <div className="flex gap-4 items-center">
             <header className="flex items-center">
               <Show when="signed-out">

@@ -29,9 +29,15 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      k-convert:
+        specifier: ^1.0.6
+        version: 1.0.6
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
       quill:
         specifier: ^2.0.3
         version: 2.0.3
@@ -1297,6 +1303,9 @@ packages:
   jsonfile@6.2.1:
     resolution: {integrity: sha512-zwOTdL3rFQ/lRdBnntKVOX6k5cKJwEc1HdilT71BWEu7J41gXIB2MRp+vxduPSwZJPWBxEzv4yH1wYLJGUHX4Q==}
 
+  k-convert@1.0.6:
+    resolution: {integrity: sha512-gsZfVs07CAEGGbS5Ur4slgDNhI8IAUgWnl4D77S72MGKg960KXCc6xDRcvM4jIuzTlR6lWW9u4qTtGfOeLK43A==}
+
   kleur@3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
@@ -1534,6 +1543,9 @@ packages:
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
+  moment@2.30.1:
+    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -3139,6 +3151,8 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
+  k-convert@1.0.6: {}
+
   kleur@3.0.3: {}
 
   kleur@4.1.5: {}
@@ -3303,6 +3317,8 @@ snapshots:
       brace-expansion: 5.0.9
 
   minimist@1.2.8: {}
+
+  moment@2.30.1: {}
 
   ms@2.1.3: {}
 
