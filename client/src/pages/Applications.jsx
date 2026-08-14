@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
-import { assets } from "../assets/assets";
+import { assets, jobsApplied } from "../assets/assets";
+import moment from "moment";
+import Footer from "../components/Footer";
 
 const Applications = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -57,8 +59,52 @@ const Applications = () => {
             </div>
           )}
         </div>
-        <h2>Job Applied</h2>
+        <h2 className="text-xl font-semibold mb-4">Jobs Applied</h2>
+        <table className="min-w-full bg-white rounded-lg">
+          <thead>
+            <tr>
+              <th className="py-3 px-4 border-b text-left">Comapany</th>
+              <th className="py-3 px-4 border-b text-left">Job Title</th>
+              <th className="py-3 px-4 border-b text-left max-sm:hidden">
+                Location
+              </th>
+              <th className="py-3 px-4 border-b text-left max-sm:hidden">
+                Date
+              </th>
+              <th className="py-3 px-4 border-b text-left">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {jobsApplied.map((job, index) =>
+              true ? (
+                <tr>
+                  <td className="py-3 px-4 flex items-center gap-2 border-b">
+                    <img className="w-8 h-8" src={job.logo} alt="" />
+                    {job.company}
+                  </td>
+                  <td className="py-2 px-4 bg-bottom">{job.title}</td>
+                  <td className="py-2 px-4 bg-bottom max-sm:hidden">
+                    {" "}
+                    {job.location}{" "}
+                  </td>
+                  <td className="py-2 px-4 bg-bottom max-sm:hidden">
+                    {" "}
+                    {moment(job.date).format("ll")}{" "}
+                  </td>
+                  <td className="py-2 px-4 bg-bottom">
+                    <span
+                      className={`${job.status === "Accepted" ? "bg-green-100" : job.status === "Rejected" ? "bg-red-100" : "bg-blue-100"} px-4 py-1.5 rounded `}
+                    >
+                      {job.status}
+                    </span>
+                  </td>
+                </tr>
+              ) : null,
+            )}
+          </tbody>
+        </table>
       </div>
+      <Footer />
     </>
   );
 };
