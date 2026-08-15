@@ -4,11 +4,15 @@ import { SignInButton, Show, SignUpButton, UserButton } from "@clerk/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/react";
 import { Loader } from "lucide-react";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 const Navbar = () => {
   const { user, isSignedIn, isLoaded } = useUser();
 
   const navigate = useNavigate();
+
+  const { setShowRecruiterLogin } = useContext(AppContext);
 
   return (
     <div className="sticky top-2 z-50">
@@ -25,7 +29,12 @@ const Navbar = () => {
               <Show when="signed-out">
                 {/* <SignUpButton></SignUpButton> */}
                 <div className="flex gap-4">
-                  <Button className={""} size={"lg"} variant={"secondary"}>
+                  <Button
+                    onClick={(e) => setShowRecruiterLogin(true)}
+                    className={""}
+                    size={"lg"}
+                    variant={"secondary"}
+                  >
                     Recruiter Login
                   </Button>
 
