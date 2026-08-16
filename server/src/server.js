@@ -3,12 +3,15 @@ import cors from "cors";
 import "dotenv/config";
 import { connectDB } from "./configs/db.config.js";
 import { clerkWebhook } from "./controllers/webhook.controller.js";
+import companyRouter from "./routes/company.route.js";
+import { connectCloudinary } from "./configs/cloudinary.config.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 8001;
 
 //MongoDB connection
-connectDB();
+await connectDB();
+await connectCloudinary();
 
 app.use(cors());
 
@@ -21,6 +24,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
   return res.status(200).json({ server: "Healthy" });
 });
+
+//Company Router
+app.use("/api/company", companyRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT:${PORT}`);

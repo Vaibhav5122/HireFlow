@@ -23,9 +23,14 @@ export async function clerkWebhook(req, res) {
 
     switch (type) {
       case "user.created": {
+        const hasEmail =
+          data.email_addresses && data.email_addresses.length > 0;
+        const emailAddress = hasEmail
+          ? data.email_addresses[0].email_address
+          : `test-clerk-${data.id || "dummy"}@example.com`;
         const userData = {
           _id: data.id,
-          email: data.email_addresses[0].email_address,
+          email: emailAddress,
           name: fullName,
           image: data.image_url,
           resume: "",
@@ -34,8 +39,13 @@ export async function clerkWebhook(req, res) {
         return res.status(201).json({ message: "User Created" });
       }
       case "user.updated": {
+        const hasEmail =
+          data.email_addresses && data.email_addresses.length > 0;
+        const emailAddress = hasEmail
+          ? data.email_addresses[0].email_address
+          : `test-clerk-${data.id || "dummy"}@example.com`;
         const userData = {
-          email: data.email_addresses[0].email_address,
+          email: emailAddress,
           name: fullName,
           image: data.image_url,
         };
