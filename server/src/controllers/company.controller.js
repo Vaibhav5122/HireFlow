@@ -52,6 +52,7 @@ export async function registerCompany(req, res) {
     return res.status(500).json({ success: false, message: error.message });
   }
 }
+
 export async function loginCompany(req, res) {
   const { email, password } = req.body;
 
@@ -87,7 +88,17 @@ export async function loginCompany(req, res) {
     return res.status(500).json({ success: false, message: error.message });
   }
 }
-export async function getCompanyData(req, res) {}
+
+export async function getCompanyData(req, res) {
+  try {
+    const company = req.company;
+
+    return res.status(200).json({ success: true, company });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 export async function postJob(req, res) {
   const { title, description, location, salary, level, category } = req.body;
 
@@ -110,7 +121,36 @@ export async function postJob(req, res) {
     return res.status(500).json({ success: false, message: error.message });
   }
 }
+
 export async function getCompanyJobApplicants(req, res) {}
-export async function getCompanyPostedJobs(req, res) {}
+
+export async function getCompanyPostedJobs(req, res) {
+  try {
+    const companyId = req.company._id;
+
+    const jobs = await Job.find({ companyId });
+
+    return res.status(200).json({ success: true, jobsData: jobs });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
 export async function changeJobApplicationsStatus(req, res) {}
-export async function changeVisibility(req, res) {}
+export async function changeVisibility(req, res) {
+  try {
+    const { id } = req.body;
+
+    const companyId = req.company._id;
+
+    const job = await Job.findById(id);
+
+    if (companyId.toString() === job.companyId.toString()) {
+      job.visible = !job.visible;
+    }
+    await job.save();
+
+    return res.status(200).json({ success: true, job });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
