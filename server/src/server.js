@@ -11,6 +11,9 @@ const PORT = process.env.PORT ?? 8001;
 connectDB();
 
 app.use(cors());
+
+app.post("/webhooks", express.raw({ type: "application/json" }), clerkWebhook);
+
 app.use(express.json());
 
 //Routes
@@ -18,8 +21,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
   return res.status(200).json({ server: "Healthy" });
 });
-
-app.post("/webhooks", clerkWebhook);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT:${PORT}`);
