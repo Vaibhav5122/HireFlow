@@ -5,6 +5,7 @@ import { connectDB } from "./configs/db.config.js";
 import { clerkWebhook } from "./controllers/webhook.controller.js";
 import companyRouter from "./routes/company.route.js";
 import { connectCloudinary } from "./configs/cloudinary.config.js";
+import { jobRouter } from "./routes/job.route.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 8001;
@@ -27,6 +28,9 @@ app.get("/", (req, res) => {
 
 //Company Router
 app.use("/api/company", companyRouter);
+
+// Job Router
+app.use("/api/jobs", jobRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT:${PORT}`);
