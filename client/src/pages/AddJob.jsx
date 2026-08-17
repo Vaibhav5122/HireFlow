@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Quill from "quill";
 import { JobCategories, JobLocations } from "../assets/assets";
 import { Button } from "../components/ui/button";
+import axios from "axios";
+import { AppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
 
 const AddJob = () => {
   const [title, setTitle] = useState("");
@@ -13,6 +16,39 @@ const AddJob = () => {
   const editorRef = useRef(null);
   const quillRef = useRef(null);
 
+  const { backendUrl, companyToken } = useContext(AppContext);
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      const description = quillRef.current.root.innerHTML;
+
+      const { data } = await axios.post(
+        `${backendUrl}/api/company/post-job`,
+        {
+          title,
+          description,
+          location,
+          salary,
+          category,
+          level,
+        },
+        { headers: { token: companyToken } },
+      );
+      if (data.success) {
+        toast.success(data.message);
+        setTitle("");
+        setSalary(0);
+        quillRef.current.root.innerHTML = "";
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     //Initiate quill
     if (!quillRef.current && editorRef.current) {
@@ -23,10 +59,7 @@ const AddJob = () => {
   }, []);
 
   return (
-    <form
-      action=""
-      className="container p-4 flex flex-col w-full items-start gap-3"
-    >
+    <form className="container p-4 flex flex-col w-full items-start gap-3">
       <div className="w-full">
         <p className="mb-2">Job Title</p>
         <input
@@ -97,7 +130,9 @@ const AddJob = () => {
             min={0}
           />
         </div>
-        <Button className={"w-28 py-4 mt-4"}>Add</Button>
+        <Button onClick={onSubmitHandler} className={"w-28 py-4 mt-4"}>
+          Add
+        </Button>
       </div>
     </form>
   );

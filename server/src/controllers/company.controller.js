@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import { generateToken } from "../utils/generateToken.util.js";
 import { Job } from "../models/job.model.js";
+import { JobApplication } from "../models/jobApplication.model.js";
 
 export async function registerCompany(req, res) {
   const { name, email, password } = req.body;
@@ -130,7 +131,15 @@ export async function getCompanyPostedJobs(req, res) {
 
     const jobs = await Job.find({ companyId });
 
-    return res.status(200).json({ success: true, jobsData: jobs });
+    const jobsData = await Promise.all(
+      jobs.map(async (job) => {
+        const applicants = await JobApplication.find({ jobId: job._id });
+
+        return { ...job.toObject(), applicants: applicants.length };
+      }),
+    );
+
+    return res.status(200).json({ success: true, jobsData });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
