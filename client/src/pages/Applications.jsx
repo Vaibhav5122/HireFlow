@@ -1,14 +1,49 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { assets, jobsApplied } from "../assets/assets";
 import moment from "moment";
 import Footer from "../components/Footer";
+import { AppContext } from "../context/AppContext";
+import { useAuth, useUser } from "@clerk/react";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Applications = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [resume, setResume] = useState(null);
+
+  const { user } = useUser();
+  const { getToken } = useAuth();
+
+  const { backendUrl, userData, userApplications, fetchUserData } =
+    useContext(AppContext);
+
+  const updateResume = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("resume", resume);
+
+      const token = await getToken();
+
+      const { data } = await axios.post(
+        `${backendUrl}/api/users/update-resume`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      if (data.success) {
+        toast.success(data.message);
+        await fetchUserData();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setIsEdit(false);
+    setResume("");
+  };
 
   return (
     <>
@@ -16,15 +51,15 @@ const Applications = () => {
       <div className="container px-4 min-h-[65vh] 2xl:px-20 mx-auto my-10">
         <h2 className="text-xl font-semibold">Your Resume</h2>
         <div className="flex mt-3 mb-6 gap-2">
-          {isEdit ? (
+          {isEdit || (userData && userData.resume === "") ? (
             <>
               <label htmlFor="resumeUpload" className="flex items-center">
-                <Button
+                <p
                   variant={"secondary"}
-                  className="text-sm bg-blue-100 text-blue-600 px-6 py-5 rounded-lg mr-2"
+                  className=" cursor-pointer text-sm bg-blue-100 text-blue-600 px-6 py-3 rounded-lg mr-2"
                 >
-                  Select Resume
-                </Button>
+                  {resume ? resume.name : "Select Resme"}
+                </p>
                 <input
                   id="resumeUpload"
                   onChange={(e) => setResume(e.target.files[0])}
@@ -32,19 +67,23 @@ const Applications = () => {
                   hidden
                   accept="application/pdf"
                 />
-                <img src={assets.profile_upload_icon} alt="" />
               </label>
+              <img src={assets.profile_upload_icon} alt="" />
               <Button
-                onClick={(e) => setIsEdit(false)}
+                onClick={updateResume}
                 className={"text-sm border rounded-lg px-6 py-5 "}
               >
                 Save
               </Button>
             </>
           ) : (
-            <div className="flx gap-2">
+            <div className="flex gap-3">
               <Link>
-                <Button className={"px-5 py-4 rounded-lg border-gray-300"}>
+                <Button
+                  className={
+                    "text-md font-bold px-6 py-5 rounded-lg border-gray-300"
+                  }
+                >
                   Resume
                 </Button>
               </Link>
@@ -52,7 +91,9 @@ const Applications = () => {
                 onClick={() => setIsEdit(true)}
                 variant={"secondary"}
                 size={"lg"}
-                className={"rounded-lg px-6 py-4 text-gray-500 border-gray-300"}
+                className={
+                  " text-md font-bold rounded-lg px-6 py-5 text-gray-500 border-gray-300"
+                }
               >
                 Edit
               </Button>

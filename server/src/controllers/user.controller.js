@@ -1,10 +1,11 @@
+import { getAuth } from "@clerk/express";
 import { Job } from "../models/job.model.js";
 import { JobApplication } from "../models/jobApplication.model.js";
 import User from "../models/user.models.js";
 import { v2 as cloudinary } from "cloudinary";
 
 export async function getUserData(req, res) {
-  const userId = req.auth.userId;
+  const { userId } = getAuth(req); //req.auth; //req.auth.userId;
 
   try {
     const user = await User.findById(userId);
@@ -23,7 +24,7 @@ export async function getUserData(req, res) {
 export async function applyForJob(req, res) {
   const { jobId } = req.body;
 
-  const userId = req.auth.userId;
+  const { userId } = getAuth(req);
 
   try {
     const isAlreadyApplied = await JobApplication.find({ jobId, userId });
@@ -57,7 +58,7 @@ export async function applyForJob(req, res) {
 
 export async function getUserJobApplications(req, res) {
   try {
-    const userId = req.auth.userId;
+    const { userId } = getAuth(req);
 
     const application = await JobApplication.find({ userId })
       .populate("companyId", "name email image")
@@ -78,17 +79,18 @@ export async function getUserJobApplications(req, res) {
 
 export async function updateUserResume(req, res) {
   try {
-    const userId = req.auth.userId;
+    const { userId } = getAuth(req);
 
-    const resumeFile = req.resumeFile;
+    const resumeFile = req.file;
 
     const userData = await User.findById(userId);
 
     if (resumeFile) {
-      const resumeUpload = await cloudinary.uploader.upload(resumeFile, {
+      const resumeUpload = await cloudinary.uploader.upload(resumeFile.path, {
         folder: "HireFlow/resumes",
         resource_type: "raw",
       });
+      userData.resume = resumeUpload.secure_url;
     }
 
     await userData.save();

@@ -10,7 +10,7 @@ const JobCard = ({ job }) => {
       <div className="flex justify-between items-center">
         <img
           className="h-12 w-12 object-contain"
-          src={assets.company_icon}
+          src={job.companyId.image}
           alt=""
         />
       </div>

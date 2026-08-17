@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { LoaderIcon } from "lucide-react";
-import { Loading, LoadingBig } from "../components/Loading";
+import { LoadingBig } from "../components/Loading";
 import Navbar from "../components/Navbar";
 import { assets } from "../assets/assets";
 import { Button } from "../components/ui/button";
@@ -10,26 +9,70 @@ import kconvert from "k-convert";
 import moment from "moment";
 import JobCard from "../components/JobCard";
 import Footer from "../components/Footer";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useAuth } from "@clerk/react";
 
 const ApplyJob = () => {
   const { id } = useParams();
 
+  const { getToken } = useAuth();
+
+  const navigate = useNavigate();
+
   const [JobData, setJobData] = useState(null);
 
-  const { jobs } = useContext(AppContext);
+  const { jobs, backendUrl, userData, userApplications } =
+    useContext(AppContext);
 
   const fetchJobs = async () => {
-    const data = jobs.filter((job) => job._id === id);
-    if (data.length !== 0) {
-      setJobData(data[0]);
-      console.log(data[0]);
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/jobs/${id}`);
+
+      if (data.success) {
+        setJobData(data.job);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const applyHandler = async () => {
+    try {
+      if (!userData) {
+        return toast.error("Login to apply for jobs");
+      }
+      if (!userData.resume) {
+        navigate("/applications");
+        return toast.error("Upload resume to apply");
+      }
+
+      const token = await getToken();
+
+      const { data } = await axios.post(
+        `${backendUrl}/api/users/apply`,
+        {
+          jobId: JobData._id,
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      const backendMessage =
+        error.response.data.message || "Something went wrong";
+      toast.error(backendMessage);
     }
   };
   useEffect(() => {
-    if (jobs.length > 0) {
-      fetchJobs();
-    }
-  }, [id, jobs]);
+    fetchJobs();
+  }, [id]);
 
   return JobData ? (
     <>
@@ -68,7 +111,10 @@ const ApplyJob = () => {
               </div>
             </div>
             <div className="flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center">
-              <Button className={" p-2.5 py-4 px-10 text-white rounded"}>
+              <Button
+                onClick={applyHandler}
+                className={" p-2.5 py-4 px-10 text-white rounded"}
+              >
                 Apply Now
               </Button>
               <p className="mt-1 text-gray-600">
@@ -83,7 +129,10 @@ const ApplyJob = () => {
                 className="rich-text mb-10 flex flex-col gap-4"
                 dangerouslySetInnerHTML={{ __html: JobData.description }}
               ></div>
-              <Button className={" p-2.5 py-4 px-10 text-white rounded"}>
+              <Button
+                onClick={applyHandler}
+                className={" p-2.5 py-4 px-10 text-white rounded"}
+              >
                 Apply Now
               </Button>
             </div>
