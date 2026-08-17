@@ -123,7 +123,20 @@ export async function postJob(req, res) {
   }
 }
 
-export async function getCompanyJobApplicants(req, res) {}
+export async function getCompanyJobApplicants(req, res) {
+  try {
+    const companyId = req.company._id;
+
+    const applications = await JobApplication.find({ companyId })
+      .populate("userId", "name image resume")
+      .populate("jobId", "title location category level salary")
+      .exec();
+
+    return res.status(200).json({ success: true, applications });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
 
 export async function getCompanyPostedJobs(req, res) {
   try {
@@ -144,7 +157,17 @@ export async function getCompanyPostedJobs(req, res) {
     return res.status(500).json({ success: false, message: error.message });
   }
 }
-export async function changeJobApplicationsStatus(req, res) {}
+export async function changeJobApplicationsStatus(req, res) {
+  try {
+    const { id, status } = req.body;
+
+    await JobApplication.findOneAndUpdate({ _id: id }, { status });
+
+    return res.status(200).json({ success: true, message: "Status Changed" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
 export async function changeVisibility(req, res) {
   try {
     const { id } = req.body;

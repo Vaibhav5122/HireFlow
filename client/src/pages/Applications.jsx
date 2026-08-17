@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
@@ -17,8 +17,13 @@ const Applications = () => {
   const { user } = useUser();
   const { getToken } = useAuth();
 
-  const { backendUrl, userData, userApplications, fetchUserData } =
-    useContext(AppContext);
+  const {
+    backendUrl,
+    userData,
+    userApplications,
+    fetchUserData,
+    fetchUserApplications,
+  } = useContext(AppContext);
 
   const updateResume = async () => {
     try {
@@ -45,6 +50,11 @@ const Applications = () => {
     setResume("");
   };
 
+  useEffect(() => {
+    if (user) {
+      fetchUserApplications;
+    }
+  }, [user]);
   return (
     <>
       <Navbar />
@@ -78,7 +88,7 @@ const Applications = () => {
             </>
           ) : (
             <div className="flex gap-3">
-              <Link>
+              <Link target="_blank" to={userData.resume}>
                 <Button
                   className={
                     "text-md font-bold px-6 py-5 rounded-lg border-gray-300"
@@ -116,32 +126,37 @@ const Applications = () => {
             </tr>
           </thead>
           <tbody>
-            {jobsApplied.map((job, index) =>
-              true ? (
-                <tr>
-                  <td className="py-3 px-4 flex items-center gap-2 border-b">
-                    <img className="w-8 h-8" src={job.logo} alt="" />
-                    {job.company}
-                  </td>
-                  <td className="py-2 px-4 bg-bottom">{job.title}</td>
-                  <td className="py-2 px-4 bg-bottom max-sm:hidden">
-                    {" "}
-                    {job.location}{" "}
-                  </td>
-                  <td className="py-2 px-4 bg-bottom max-sm:hidden">
-                    {" "}
-                    {moment(job.date).format("ll")}{" "}
-                  </td>
-                  <td className="py-2 px-4 bg-bottom">
-                    <span
-                      className={`${job.status === "Accepted" ? "bg-green-100" : job.status === "Rejected" ? "bg-red-100" : "bg-blue-100"} px-4 py-1.5 rounded `}
-                    >
-                      {job.status}
-                    </span>
-                  </td>
-                </tr>
-              ) : null,
-            )}
+            {userApplications &&
+              userApplications.map((job, index) =>
+                true ? (
+                  <tr key={index}>
+                    <td className="py-3 px-4 flex items-center gap-2 border-b">
+                      <img
+                        className="w-8 h-8"
+                        src={job.companyId.image}
+                        alt=""
+                      />
+                      {job.companyId.name}
+                    </td>
+                    <td className="py-2 px-4 bg-bottom">{job.jobId.title}</td>
+                    <td className="py-2 px-4 bg-bottom max-sm:hidden">
+                      {" "}
+                      {job.jobId.location}{" "}
+                    </td>
+                    <td className="py-2 px-4 bg-bottom max-sm:hidden">
+                      {" "}
+                      {moment(job.date).format("ll")}{" "}
+                    </td>
+                    <td className="py-2 px-4 bg-bottom">
+                      <span
+                        className={`${job.status === "Accepted" ? "bg-green-100" : job.status === "Rejected" ? "bg-red-100" : "bg-blue-100"} px-4 py-1.5 rounded `}
+                      >
+                        {job.status}
+                      </span>
+                    </td>
+                  </tr>
+                ) : null,
+              )}
           </tbody>
         </table>
       </div>
