@@ -16,7 +16,21 @@ const PORT = process.env.PORT ?? 8001;
 await connectDB();
 await connectCloudinary();
 
-app.use(cors());
+const allowedOrigins = ["http://localhost:5173", process.env.FRONTEND_ORIGIN];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS policy"));
+      }
+    },
+    credentials: true, // For Clerk auth tokens and cookies
+  }),
+);
+
 app.use(clerkMiddleware());
 
 app.post("/webhooks", express.raw({ type: "application/json" }), clerkWebhook);
