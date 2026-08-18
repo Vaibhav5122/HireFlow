@@ -71,15 +71,17 @@ const JobListings = () => {
   }, [jobs, selectedCategories, selectedLocations, searchFilter]);
 
   return (
-    <div className="container 2xl:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8 ">
-      <div className="w-full lg:w-1/4 bg-white px-4 ">
+    <div className="container mx-auto flex flex-col py-8 max-lg:space-y-8 2xl:px-20 lg:flex-row">
+      <div className="w-full bg-white px-4 lg:w-1/4">
         {isSearched &&
           (searchFilter.title !== "" || searchFilter.location !== "") && (
             <>
-              <h3 className="font-medium text-lg mb-4">Current Search</h3>
-              <div className="mb-4 text-gray-600 flex gap-4">
+              <h3 className="mb-4 text-lg font-medium text-slate-900">
+                Current Search
+              </h3>
+              <div className="mb-4 flex gap-4 text-slate-600">
                 {searchFilter.title && (
-                  <span className="inline-flex items-center gap-2.5 bg-blue-50 border border-blue-200 px-4 py-1.5 rounded">
+                  <span className="inline-flex items-center gap-2.5 rounded-full border border-slate-200 bg-slate-100 px-4 py-1.5 text-sm text-slate-700">
                     {searchFilter.title}
                     <img
                       onClick={(e) =>
@@ -87,12 +89,13 @@ const JobListings = () => {
                       }
                       className="cursor-pointer"
                       src={assets.cross_icon}
+                      alt="Clear title filter"
                     />
                   </span>
                 )}
 
                 {searchFilter.location && (
-                  <span className="inline-flex items-center gap-2.5 bg-red-50 border border-red-200 px-4 py-1.5 rounded">
+                  <span className="inline-flex items-center gap-2.5 rounded-full border border-slate-200 bg-slate-100 px-4 py-1.5 text-sm text-slate-700">
                     {searchFilter.location}
                     <img
                       onClick={(e) =>
@@ -100,6 +103,7 @@ const JobListings = () => {
                       }
                       className="cursor-pointer"
                       src={assets.cross_icon}
+                      alt="Clear location filter"
                     />
                   </span>
                 )}
@@ -107,21 +111,25 @@ const JobListings = () => {
             </>
           )}
         <Button
-          variant={"destructive"}
+          variant={"secondary"}
           onClick={(e) => setShowFilter((prev) => !prev)}
-          className={"px-6 py-1.5 rounded border border-gray-400 lg:hidden"}
+          className={
+            "rounded-full border border-slate-200 px-6 py-1.5 text-slate-700 lg:hidden"
+          }
         >
           {showFilter ? "Close" : "Filters"}
         </Button>
 
         {/* Category filter */}
         <div className={showFilter ? "" : "hidden lg:block"}>
-          <h4 className="font-medium text-lg py-4 ">Search by categories</h4>
-          <ul className="space-y-4 text-gray-600">
+          <h4 className="py-4 text-lg font-medium text-slate-900">
+            Search by categories
+          </h4>
+          <ul className="space-y-4 text-slate-600">
             {JobCategories.map((e, id) => (
               <li key={id} className="flex gap-3 items-center">
                 <input
-                  className="scale-125"
+                  className="scale-110 accent-slate-900"
                   type="checkbox"
                   onChange={() => handleCategoryChange(e)}
                   checked={selectedCategories.includes(e)}
@@ -133,14 +141,14 @@ const JobListings = () => {
         </div>
         {/* Location Filter */}
         <div className={showFilter ? "" : "hidden lg:block"}>
-          <h4 className="font-medium text-lg py-4 pt-14 ">
+          <h4 className="pt-14 text-lg font-medium text-slate-900 py-4">
             Search by location
           </h4>
-          <ul className="space-y-4 text-gray-600">
+          <ul className="space-y-4 text-slate-600">
             {JobLocations.map((e, id) => (
               <li key={id} className="flex gap-3 items-center">
                 <input
-                  className="scale-125"
+                  className="scale-110 accent-slate-900"
                   type="checkbox"
                   onChange={() => handleLocationChange(e)}
                   checked={selectedLocations.includes(e)}
@@ -152,11 +160,13 @@ const JobListings = () => {
         </div>
       </div>
       {/* Job Listings */}
-      <section className="w-full lg:w-3/4 text-gray-800 max-lg:px-4">
-        <h3 className="font-medium text-3xl py-2" id="job-list">
+      <section className="w-full text-slate-800 max-lg:px-4 lg:w-3/4">
+        <h3 className="py-2 text-3xl font-medium" id="job-list">
           Latest Jobs
         </h3>
-        <p className="mb-8">Get your desired job from top companies</p>
+        <p className="mb-8 text-slate-600">
+          Get your desired job from top companies
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredJobs
             .slice((currentPage - 1) * 6, currentPage * 6)
@@ -176,7 +186,9 @@ const JobListings = () => {
                 alt=""
               /> */}
               <ChevronLeftIcon
-                className={currentPage !== 1 ? "text-blue-500" : ""}
+                className={
+                  currentPage !== 1 ? "text-slate-900" : "text-slate-300"
+                }
                 onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
               />
             </Link>
@@ -186,7 +198,7 @@ const JobListings = () => {
                   <Button
                     onClick={() => setCurrentPage(id + 1)}
                     variant={"link"}
-                    className={`w-10 h-10 items-center justify-center border border-gray-300 rounded ${currentPage === id + 1 ? "bg-blue-100 text-blue-500" : "text-gray-500"}`}
+                    className={`w-10 h-10 items-center justify-center rounded-full border ${currentPage === id + 1 ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 text-slate-500"}`}
                   >
                     {id + 1}
                   </Button>
@@ -207,8 +219,8 @@ const JobListings = () => {
                 className={
                   currentPage !==
                   Math.min(currentPage + 1, Math.ceil(filteredJobs.length / 6))
-                    ? "text-blue-500"
-                    : ""
+                    ? "text-slate-900"
+                    : "text-slate-300"
                 }
                 onClick={() =>
                   setCurrentPage(

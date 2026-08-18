@@ -1,4 +1,3 @@
-import { manageJobsData } from "../assets/assets";
 import moment from "moment";
 import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +22,6 @@ const ManageJobs = () => {
 
       if (data.success) {
         setJobs(data.jobsData.reverse());
-        console.log(data.jobsData);
       } else {
         toast.error(data.message);
       }
@@ -55,9 +53,6 @@ const ManageJobs = () => {
       fetchCompanyJob();
     }
   }, [companyToken]);
-
-  console.log("jobbbb", jobs);
-  // console.log("titlle", jobs[0].title);
 
   return jobs ? (
     jobs.length === 0 ? (

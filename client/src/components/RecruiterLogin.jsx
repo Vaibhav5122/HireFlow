@@ -21,6 +21,8 @@ const RecruiterLogin = () => {
   const { setShowRecruiterLogin, backendUrl, setCompanyToken, setCompanyData } =
     useContext(AppContext);
 
+  const closeModal = () => setShowRecruiterLogin(false);
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
@@ -33,8 +35,6 @@ const RecruiterLogin = () => {
           email,
           password,
         });
-
-        console.log(data);
 
         if (data.success) {
           setCompanyData(data.company);
@@ -81,22 +81,37 @@ const RecruiterLogin = () => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
     return () => {
       document.body.style.overflow = "unset";
+      document.removeEventListener("keydown", handleEscape);
     };
   }, []);
 
   return (
-    <div className="absolute top-0 left-0 right-0 bottom-0 z-10 backdrop-blur-sm bg-black/30 flex justify-center items-center ">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm"
+      onMouseDown={closeModal}
+    >
       <form
         onSubmit={onSubmitHandler}
-        className="relative bg-white p-10 rounded-2xl text-slate-500"
+        onMouseDown={(e) => e.stopPropagation()}
+        className="relative w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 text-slate-600 shadow-[0_30px_80px_rgba(15,23,42,0.2)] sm:p-8"
         action=""
       >
-        <h1 className="text-center text-neutral-700 text-2xl font-medium">
+        <h1 className="text-center text-xl  text-slate-900 sm:text-2xl">
           Recruiter {state}
         </h1>
-        <p className="text-sm">Welcome back! Please sign in to continue</p>
+        <p className="mt-2 text-sm text-slate-500">
+          Welcome back! Please sign in to continue.
+        </p>
 
         {state === "Sign Up" && isTextDataSubmitted ? (
           <>
@@ -122,10 +137,10 @@ const RecruiterLogin = () => {
         ) : (
           <>
             {state !== "Login" && (
-              <div className="border px-4 py-2 flex items-center gap-2 rounded-full mt-5">
+              <div className="mt-5 flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2.5 text-slate-900">
                 <img src={assets.person_icon} alt="" />
                 <input
-                  className="outline-none text-sm"
+                  className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
                   onChange={(e) => setName(e.target.value)}
                   value={name}
                   type="text"
@@ -135,10 +150,10 @@ const RecruiterLogin = () => {
               </div>
             )}
 
-            <div className="border px-4 py-2 flex items-center gap-2 rounded-full mt-5">
+            <div className="mt-5 flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2.5 text-slate-900">
               <img src={assets.email_icon} alt="" />
               <input
-                className="outline-none text-sm"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 type="email"
@@ -146,10 +161,10 @@ const RecruiterLogin = () => {
                 required
               />
             </div>
-            <div className="border px-4 py-2 flex items-center gap-2 rounded-full mt-5">
+            <div className="mt-5 flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2.5 text-slate-900">
               <img src={assets.lock_icon} alt="" />
               <input
-                className="outline-none text-sm"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 placeholder="Password"
@@ -159,14 +174,14 @@ const RecruiterLogin = () => {
           </>
         )}
         {state === "Login" && (
-          <p className="text-sm text-blue-600 cursor-pointer mt-4">
-            Forgot Password
+          <p className="mt-4 cursor-pointer text-sm text-slate-700 hover:text-slate-900">
+            {/* Forgot Password */}
           </p>
         )}
 
         <Button
           type="submit"
-          className={"w-full text-white py-4 rounded-2xl mt-4"}
+          className={"mt-5  w-full rounded-full py-4 text-white"}
         >
           {state === "Login"
             ? "Login"
@@ -175,10 +190,11 @@ const RecruiterLogin = () => {
               : "Next"}
         </Button>
         {state === "Login" ? (
-          <p className="mt-5 text-center items-center justify-center text-md flex gap-0">
+          <p className="mt-5 flex items-center justify-center gap-0 text-center text-sm text-slate-600">
             Don't have an account?{" "}
             <Button
-              className={"text-sm"}
+              type="button"
+              className={"px-1  text-sm text-slate-900"}
               variant={"link"}
               onClick={() => setState("Sign Up")}
             >
@@ -186,10 +202,11 @@ const RecruiterLogin = () => {
             </Button>
           </p>
         ) : (
-          <p className="mt-5 text-center items-center justify-center text-md flex gap-0">
+          <p className="mt-5 flex items-center justify-center gap-0 text-center text-sm text-slate-600">
             Already have an account?{" "}
             <Button
-              className={"text-sm"}
+              type="button"
+              className={"px-1  text-sm text-slate-900"}
               variant={"link"}
               onClick={() => setState("Login")}
             >
@@ -198,9 +215,9 @@ const RecruiterLogin = () => {
           </p>
         )}
         <img
-          onClick={(e) => setShowRecruiterLogin(false)}
+          onClick={closeModal}
           src={assets.cross_icon}
-          className="absolute top-5 right-5 cursor-pointer"
+          className="absolute right-5 top-5 cursor-pointer"
           alt=""
         />
       </form>

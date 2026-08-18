@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { assets, viewApplicationsPageData } from "../assets/assets";
+import { useContext, useEffect, useState } from "react";
+import { assets } from "../assets/assets";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { AppContext } from "../context/AppContext";

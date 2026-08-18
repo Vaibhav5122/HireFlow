@@ -1,5 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import ApplyJob from "./pages/ApplyJob";
 import Applications from "./pages/Applications";
@@ -25,6 +26,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />}>
           {companyToken ? (
             <>
+              <Route index element={<Navigate to="manage-jobs" replace />} />
               <Route path="add-job" element={<AddJob />} />
               <Route path="manage-jobs" element={<ManageJobs />} />
               <Route path="view-applications" element={<ViewAplications />} />

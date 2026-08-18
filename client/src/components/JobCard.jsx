@@ -6,20 +6,20 @@ const JobCard = ({ job }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="border p-6 shadow rounded">
-      <div className="flex justify-between items-center">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-[0_18px_50px_rgba(15,23,42,0.1)]">
+      <div className="flex items-center justify-between">
         <img
           className="h-12 w-12 object-contain"
           src={job.companyId.image}
           alt=""
         />
       </div>
-      <h4 className="font-medium text-xl mt-2">{job.title}</h4>
+      <h4 className="mt-2 text-xl font-medium text-slate-900">{job.title}</h4>
       <div className="flex items-center gap-3 mt-2 text-xs">
-        <span className="bg-blue-50 border border-blue-200 px-4 py-1.5 rounded">
+        <span className="rounded-full border border-slate-200 bg-slate-100 px-4 py-1.5 text-slate-700">
           {job.location}
         </span>
-        <span className="bg-red-50 border border-red-200 px-4 py-1.5 rounded">
+        <span className="rounded-full border border-slate-200 bg-slate-100 px-4 py-1.5 text-slate-700">
           {job.level}
         </span>
       </div>
