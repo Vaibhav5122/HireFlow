@@ -22,8 +22,7 @@
 
 ## 🌐 Live Deployment & Links
 
-- **API Backend Server (Render)**: [https://hireflow-fawn.vercel.app](https://hireflow-fawn.vercel.app)
-- **Frontend App**: Deployed & connected via Render backend environment.
+- **Live Hosted App Link**: [https://hireflow-fawn.vercel.app](https://hireflow-fawn.vercel.app)
 
 ---
 
