@@ -10,10 +10,14 @@ import {
 import JobCard from "./JobCard";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  LoaderPinwheelIcon,
+} from "lucide-react";
 
 const JobListings = () => {
-  const { isSearched, searchFilter, setSearchFilter, jobs } =
+  const { isSearched, searchFilter, setSearchFilter, jobs, jobsLoading } =
     useContext(AppContext);
 
   const [showFilter, setShowFilter] = useState(false);
@@ -167,13 +171,22 @@ const JobListings = () => {
         <p className="mb-8 text-slate-600">
           Get your desired job from top companies
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filteredJobs
-            .slice((currentPage - 1) * 6, currentPage * 6)
-            .map((job, index) => (
-              <JobCard key={index} job={job} />
-            ))}
-        </div>
+        {jobsLoading && filteredJobs.length === 0 ? (
+          <div className="flex min-h-72 items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50">
+            <div className="flex flex-col items-center gap-3 text-slate-500">
+              <LoaderPinwheelIcon className="h-8 w-8 animate-spin text-slate-700" />
+              <p className="text-sm font-medium">Loading latest jobs...</p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {filteredJobs
+              .slice((currentPage - 1) * 6, currentPage * 6)
+              .map((job, index) => (
+                <JobCard key={index} job={job} />
+              ))}
+          </div>
+        )}
 
         {/* Pagination */}
         {filteredJobs.length > 0 && (

@@ -10,7 +10,9 @@ const Navbar = () => {
   const { user, isSignedIn, isLoaded } = useUser();
   const navigate = useNavigate();
   const recruiterMenuRef = useRef(null);
+  const mobileAuthMenuRef = useRef(null);
   const [showRecruiterMenu, setShowRecruiterMenu] = useState(false);
+  const [showMobileAuthMenu, setShowMobileAuthMenu] = useState(false);
 
   const {
     setShowRecruiterLogin,
@@ -47,6 +49,13 @@ const Navbar = () => {
       ) {
         setShowRecruiterMenu(false);
       }
+
+      if (
+        mobileAuthMenuRef.current &&
+        !mobileAuthMenuRef.current.contains(event.target)
+      ) {
+        setShowMobileAuthMenu(false);
+      }
     };
 
     document.addEventListener("mousedown", handlePointerDown);
@@ -64,13 +73,13 @@ const Navbar = () => {
             className="h-9 cursor-pointer"
           />
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-end gap-2 sm:gap-3">
             {companyToken ? (
-              <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
                 <Link to="/dashboard/manage-jobs">
                   <Button
                     size="sm"
-                    className="h-9 rounded-full px-4 text-sm"
+                    className="h-8 rounded-full px-3 text-xs whitespace-nowrap sm:h-9 sm:px-4 sm:text-sm"
                     variant="default"
                   >
                     Dashboard
@@ -80,12 +89,12 @@ const Navbar = () => {
                   <button
                     type="button"
                     onClick={() => setShowRecruiterMenu((prev) => !prev)}
-                    className="flex h-9 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700 shadow-sm transition hover:bg-slate-100"
+                    className="flex h-8 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 text-xs text-slate-700 shadow-sm transition hover:bg-slate-100 whitespace-nowrap sm:h-9 sm:text-sm"
                   >
                     <img
                       src={recruiterAvatar}
                       alt={recruiterName}
-                      className="h-6 w-6 rounded-full border border-slate-200 object-cover"
+                      className="h-5 w-5 rounded-full border border-slate-200 object-cover sm:h-6 sm:w-6"
                     />
                     <span className="hidden max-w-30 truncate font-medium sm:inline">
                       {recruiterName}
@@ -114,10 +123,10 @@ const Navbar = () => {
                 </div>
               </div>
             ) : isSignedIn ? (
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">
                 <Link to="/applications">
                   <Button
-                    className="h-9 rounded-full px-4 text-sm"
+                    className="h-8 rounded-full px-3 text-xs whitespace-nowrap sm:h-9 sm:px-4 sm:text-sm"
                     size="sm"
                     variant="secondary"
                   >
@@ -147,33 +156,71 @@ const Navbar = () => {
                   appearance={{
                     elements: {
                       userButtonTrigger:
-                        "h-12 w-12 focus:shadow-none focus:outline-none",
-                      avatarBox: "h-12 w-12 rounded-md border border-input",
+                        "h-9 w-9 focus:shadow-none focus:outline-none sm:h-12 sm:w-12",
+                      avatarBox:
+                        "h-9 w-9 rounded-md border border-input sm:h-12 sm:w-12",
                     },
                   }}
                 />
               </div>
             ) : (
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => setShowRecruiterLogin(true)}
-                  className="h-9 rounded-full px-4 text-sm"
-                  size="sm"
-                  variant="secondary"
-                >
-                  Recruiter Login
-                </Button>
-
-                <SignInButton mode="modal">
+              <>
+                <div className="relative sm:hidden" ref={mobileAuthMenuRef}>
                   <Button
+                    onClick={() => setShowMobileAuthMenu((prev) => !prev)}
+                    className="h-8 rounded-full px-4 text-xs whitespace-nowrap"
                     size="sm"
-                    className="h-9 rounded-full px-4 text-sm"
                     variant="default"
                   >
                     Login
                   </Button>
-                </SignInButton>
-              </div>
+
+                  {showMobileAuthMenu ? (
+                    <div className="absolute right-0 top-full z-20 mt-2 w-44 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                      <SignInButton mode="modal">
+                        <button
+                          type="button"
+                          onClick={() => setShowMobileAuthMenu(false)}
+                          className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100"
+                        >
+                          Login as client
+                        </button>
+                      </SignInButton>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowMobileAuthMenu(false);
+                          setShowRecruiterLogin(true);
+                        }}
+                        className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100"
+                      >
+                        Recruiter login
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="hidden flex-wrap justify-end gap-2 sm:flex sm:gap-3">
+                  <Button
+                    onClick={() => setShowRecruiterLogin(true)}
+                    className="h-8 rounded-full px-3 text-xs whitespace-nowrap sm:h-9 sm:px-4 sm:text-sm"
+                    size="sm"
+                    variant="secondary"
+                  >
+                    Recruiter Login
+                  </Button>
+
+                  <SignInButton mode="modal">
+                    <Button
+                      size="sm"
+                      className="h-8 rounded-full px-3 text-xs whitespace-nowrap sm:h-9 sm:px-4 sm:text-sm"
+                      variant="default"
+                    >
+                      Login
+                    </Button>
+                  </SignInButton>
+                </div>
+              </>
             )}
           </div>
         </div>

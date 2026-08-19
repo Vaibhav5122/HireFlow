@@ -46,8 +46,8 @@ const Hero = () => {
           </div>
 
           <div className="w-full max-w-4xl">
-            <div className="grid overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-lg md:grid-cols-[1.35fr_1fr_auto] md:gap-px md:bg-slate-200">
-              <div className="flex items-center gap-3 bg-white px-4 py-4 text-slate-800">
+            <div className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg md:grid-cols-[1.35fr_1fr_auto] md:gap-px md:bg-slate-200 md:p-0">
+              <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4 text-slate-800 md:rounded-none md:border-0">
                 <img className="h-4 sm:h-5" src={assets.search_icon} alt="" />
                 <input
                   ref={titleRef}
@@ -56,7 +56,7 @@ const Hero = () => {
                   className="w-full bg-transparent p-0 text-sm outline-none placeholder:text-slate-500"
                 />
               </div>
-              <div className="flex items-center gap-3 bg-white px-4 py-4 text-slate-800">
+              <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4 text-slate-800 md:rounded-none md:border-0">
                 <img className="h-4 sm:h-5" src={assets.location_icon} alt="" />
                 <input
                   ref={locationRef}
@@ -68,7 +68,7 @@ const Hero = () => {
               <Button
                 onClick={onSearch}
                 size="lg"
-                className="h-full min-h-14 rounded-none rounded-b-2xl px-7 text-base md:rounded-b-none md:rounded-r-2xl"
+                className="h-full min-h-14 w-full rounded-xl px-7 text-base md:rounded-none md:rounded-r-2xl"
               >
                 <SearchIcon className="mr-2 h-4 w-4" />
                 Search
