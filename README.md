@@ -22,7 +22,7 @@
 
 ## 🌐 Live Deployment & Links
 
-- **API Backend Server (Render)**: [https://hireflow-4k6n.onrender.com](https://hireflow-4k6n.onrender.com)
+- **API Backend Server (Render)**: [https://hireflow-fawn.vercel.app](https://hireflow-fawn.vercel.app)
 - **Frontend App**: Deployed & connected via Render backend environment.
 
 ---
